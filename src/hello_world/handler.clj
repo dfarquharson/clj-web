@@ -1,11 +1,21 @@
 (ns hello-world.handler
   (:use compojure.core)
   (:require [compojure.handler :as handler]
-            [compojure.route :as route]
-            [hello-world.templates :refer [tpl-helloworld]]))
+            [compojure.route :as route]))
+
+(defn hello [s]
+  (str "Hello " s "!\n"))
+
+(def repo-dir "/Users/djfarquharson/repos/")
+
+(defn repo-exists [repo]
+  (.exists (clojure.java.io/as-file (str repo-dir repo))))
 
 (defroutes app-routes
-  (GET "/" [] (tpl-helloworld "Hello World"))
+  (GET "/" [] "Home Page\n")
+  (GET "/hello" [] "Hello world!\n")
+  (GET "/hello/:user" [user] (hello user))
+  (GET "/repo-exists/:repo" [repo] (str (repo-exists repo) "\n"))
   (route/resources "/")
   (route/not-found "Not Found"))
 
